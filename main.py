@@ -86,7 +86,7 @@ class ModernRATController(QMainWindow):
         self.setup_ui()
         
     def setup_ui(self):
-        self.setWindowTitle("System Manager Pro v2.0")
+        self.setWindowTitle("System Manager")
         self.setGeometry(100, 100, 1200, 800)
         self.setStyleSheet(self.get_dark_theme())
         
