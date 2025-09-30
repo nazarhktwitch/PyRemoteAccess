@@ -1,0 +1,10 @@
+opencv-python==4.8.1.78
+pillow==10.0.1
+pynput==1.7.6
+pywin32==306
+pycryptodome==3.19.0
+numpy==1.24.3
+PyQt5==5.15.9
+pyaudio==0.2.11
+requests==2.31.0
+pyinstaller==5.13.0
