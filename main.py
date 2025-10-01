@@ -78,7 +78,7 @@ class ClientThread(QThread):
     def run(self):
         pass
 
-class ModernRATController(QMainWindow):
+class Controller(QMainWindow):
     def __init__(self):
         super().__init__()
         self.client_thread = None
@@ -590,6 +590,6 @@ class ModernRATController(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle('Fusion')
-    window = ModernRATController()
+    window = Controller()
     window.show()
     sys.exit(app.exec_())
