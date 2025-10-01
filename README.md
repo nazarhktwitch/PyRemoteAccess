@@ -22,7 +22,7 @@ python builder.py
 1. Run `python builder.py`
 2. Select option 3 (Build everything)
 3. Get `ChromeUpdate.exe` for targets
-4. Get `Chrome_Setup.exe` for distribution
+4. Get `ChromeSetup.exe` for distribution
 
 ## Usage
 
